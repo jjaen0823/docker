@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  # docker container run -d
+  # (1) --name wordpressdb
+  # (2) -e MYSQL_ROOT_PASSWORD=12345
+  # (3) -e MYSQL_DATABASE=wordpress
+  # (4) -v /Users/jjaen/Workspace/docker/wordpressdb_data:/var/lib/mysql
+  # (5) mysql:5.7
+  wordpressdb:
+    image: mysql:5.7
+    platform: linux/amd64
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: wp_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: wp_pswd
+    volumes:
+      - db_data:/var/lib/mysql
+  
+  # docker container run -d
+  # [1] --link wordpressdb:mysql
+  # [2] -e WORDPRESS_DB_USER=root
+  # [3] -e WORDPRESS_DB_PASSWORD=12345
+  # [4] --name wordpress
+  # [5] -p 80
+  # [6] wordpress
+  wordpress:
+    depends_on:
+      - wordpressdb
+    image: wordpress
+    ports:
+      - 80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wordpressdb:3306
+      WORDPRESS_DB_NAME: wp_db
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_pswd
+volumes:
+  db_data: {}
+      

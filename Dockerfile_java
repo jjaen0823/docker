@@ -1,0 +1,8 @@
+FROM openjdk
+WORKDIR /
+
+COPY ./Gugudan.java ./
+RUN javac Gugudan.java 
+CMD [ "java", "Gugudan" ] 
+
+
